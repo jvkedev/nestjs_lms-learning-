@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './users/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -15,11 +14,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
     MongooseModule.forRootAsync({
       inject: [ConfigService],
+
       useFactory: (config: ConfigService) => {
+        const uri = config.get<string>('MONGO_URI');
+
         const isProd = config.get('NODE_ENV') === 'production';
 
         return {
-          uri: config.get<string>('MONGO_URI'),
+          uri,
           autoIndex: !isProd,
           autoCreate: !isProd,
           bufferCommands: !isProd,
@@ -31,6 +33,5 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
