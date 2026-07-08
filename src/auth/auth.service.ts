@@ -44,4 +44,8 @@ export class AuthService {
 
     return this.generateAccessToken(user._id.toString());
   }
+
+  async getUserById(id: string) {
+    return this.userServices.getUserById(id);
+  }
 }

@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { RegisterUserDto } from '../auth/dto/registerUser.dto';
@@ -42,6 +43,16 @@ export class UserService {
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
+  }
+
+  async getUserById(id: string) {
+    const user = await this.userModel.findOne({ _id: id });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
 
     return user;
