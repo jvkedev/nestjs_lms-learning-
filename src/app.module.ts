@@ -4,6 +4,10 @@ import { UserModule } from './users/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CourseModule } from './course/course.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/role.guard';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -31,7 +35,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
     UserModule,
     AuthModule,
+    CourseModule,
   ],
   controllers: [AppController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

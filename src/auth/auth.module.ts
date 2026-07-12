@@ -6,6 +6,8 @@ import type { StringValue } from 'ms';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../users/user.module';
+import { AuthGuard } from './auth.guard';
+import { RolesGuard } from './role.guard';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { UserModule } from '../users/user.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
-  exports: [AuthService],
+  providers: [AuthService, AuthGuard, RolesGuard],
+  exports: [AuthService, JwtModule, AuthGuard, RolesGuard],
 })
 export class AuthModule {}
