@@ -22,8 +22,8 @@ export class CourseService {
     });
   }
 
-  findAll() {
-    return `This action returns all course`;
+  async findAll() {
+    return await this.courseModel.find();
   }
 
   findOne(id: number) {
