@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterUserDto } from './dto/registerUser.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { UserService } from '../users/user.service';
+import { Role } from './role.enum';
 
 @Injectable()
 export class AuthService {
@@ -13,8 +14,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private async generateAccessToken(userId: string) {
-    const payload = { sub: userId };
+  private async generateAccessToken(userId: string, role: Role) {
+    const payload = { sub: userId, role };
 
     return {
       accessToken: await this.jwtService.signAsync(payload),
@@ -30,7 +31,7 @@ export class AuthService {
       password: hash,
     });
 
-    return this.generateAccessToken(user._id.toString());
+    return this.generateAccessToken(user._id.toString(), user.role);
   }
 
   async loginUser(loginUserDto: LoginUserDto) {
@@ -42,7 +43,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.generateAccessToken(user._id.toString());
+    return this.generateAccessToken(user._id.toString(), user.role);
   }
 
   async getUserById(id: string) {
